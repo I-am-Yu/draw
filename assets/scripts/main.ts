@@ -95,7 +95,6 @@ export default class Main extends cc.Component {
         point1["bind_reversal"] = false;
         point1["bind_index1"] = 0;
         point1["bind_index2"] = 1;
-        point1["bezier_array"] = Utils.getBezierArray(point1["bind_uuid"], point1["bind_index1"], point1["bind_index2"]);
         point1["bind_ctrl_dir"] = "y";
 
         let point2 = cc.instantiate(this.point)
@@ -104,7 +103,6 @@ export default class Main extends cc.Component {
         point2["bind_reversal"] = true;
         point2["bind_index1"] = 1;
         point2["bind_index2"] = 2;
-        point2["bezier_array"] = Utils.getBezierArray(point2["bind_uuid"], point2["bind_index1"], point2["bind_index2"]);
         point2["bind_ctrl_dir"] = "y";
 
         let point3 = cc.instantiate(this.point)
@@ -113,7 +111,6 @@ export default class Main extends cc.Component {
         point3["bind_reversal"] = true;
         point3["bind_index1"] = 2;
         point3["bind_index2"] = 3;
-        point3["bezier_array"] = Utils.getBezierArray(point3["bind_uuid"], point3["bind_index1"], point3["bind_index2"]);
         point3["bind_ctrl_dir"] = "x";
 
         let point4 = cc.instantiate(this.point)
@@ -122,7 +119,6 @@ export default class Main extends cc.Component {
         point4["bind_reversal"] = false;
         point4["bind_index1"] = 3;
         point4["bind_index2"] = 4;
-        point4["bezier_array"] = Utils.getBezierArray(point4["bind_uuid"], point4["bind_index1"], point4["bind_index2"]);
         point4["bind_ctrl_dir"] = "y";
 
         this.node.addChild(point1);
@@ -153,9 +149,12 @@ export default class Main extends cc.Component {
             this.setDrawPath("moveTo", points[0]);
 
             ctrlNodes.forEach(ctrlNode => {
+                let bind_uuid = ctrlNode["bind_uuid"];
                 let bind_type = ctrlNode["bind_type"];
                 let bind_index1 = ctrlNode["bind_index1"];
                 let bind_index2 = ctrlNode["bind_index2"];
+                
+                ctrlNode["bezier_array"] = Utils.getBezierArray(bind_uuid, bind_index1, bind_index2);
                 let bezier_array: cc.Vec2[] = ctrlNode["bezier_array"];
 
                 let p0 = points[bind_index1];

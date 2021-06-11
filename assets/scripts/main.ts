@@ -153,9 +153,17 @@ export default class Main extends cc.Component {
                 let bind_type = ctrlNode["bind_type"];
                 let bind_index1 = ctrlNode["bind_index1"];
                 let bind_index2 = ctrlNode["bind_index2"];
-                
-                ctrlNode["bezier_array"] = Utils.getBezierArray(bind_uuid, bind_index1, bind_index2);
                 let bezier_array: cc.Vec2[] = ctrlNode["bezier_array"];
+
+                let __temp_bezier_array: cc.Vec2[] = [];
+                if (bezier_array) {
+                    __temp_bezier_array = bezier_array
+                }
+                ctrlNode["bezier_array"] = Utils.getBezierArray(bind_uuid, bind_index1, bind_index2);
+                bezier_array = ctrlNode["bezier_array"];
+                if (__temp_bezier_array.length == 3) {
+                    bezier_array[1] = __temp_bezier_array[1];
+                }
 
                 let p0 = points[bind_index1];
                 let p1 = points[bind_index2];

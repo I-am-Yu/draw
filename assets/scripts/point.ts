@@ -52,19 +52,32 @@ export default class Point extends cc.Component {
         let bind_ctrl_dir = this.node["bind_ctrl_dir"];
         let points = Global.uuid_points_map[bind_uuid];
 
-        if (bind_ctrl_dir == "x") {
-            let x = 0;
 
-            if (this.movePos.x < this.lastPos.x) {
-                x = -1;
-                console.log("左");
-            } else if (this.movePos.x > this.lastPos.x) {
-                x = 1;
-                console.log("右");
-            }
-            if (this.firstXDir == 0 && x !== 0) {
-                this.firstXDir = x;
-            }
+        let x = 0;
+        if (this.movePos.x < this.lastPos.x) {
+            x = -1;
+            // console.log("左");
+        } else if (this.movePos.x > this.lastPos.x) {
+            x = 1;
+            // console.log("右");
+        }
+        if (this.firstXDir == 0 && x !== 0) {
+            this.firstXDir = x;
+        }
+
+        let y = 0;
+        if (this.movePos.y < this.lastPos.y) {
+            y = -1;
+            // console.log("下");
+        } else if (this.movePos.y > this.lastPos.y) {
+            y = 1;
+            // console.log("上");
+        }
+        if (this.firstYDir == 0 && y !== 0) {
+            this.firstYDir = y;
+        }
+
+        if (bind_ctrl_dir == "x") {
 
             if (bind_type == "bezierCurveTo") {
                 if (this.firstXDir == -1) {
@@ -85,24 +98,20 @@ export default class Point extends cc.Component {
         }
 
         if (bind_ctrl_dir == "y") {
-            let y = 0;
-
-            if (this.movePos.y < this.lastPos.y) {
-                y = -1;
-                console.log("下");
-            } else if (this.movePos.y > this.lastPos.y) {
-                y = 1;
-                console.log("上");
-            }
-            if (this.firstYDir == 0 && y !== 0) {
-                this.firstYDir = y;
-            }
 
             if (bind_type == "bezierCurveTo") {
                 if (this.firstYDir == -1) {
                     bezier_array[1].y += (y * Math.abs(delta.y));
                 } else if (this.firstYDir == 1) {
                     bezier_array[1].y += (y * Math.abs(delta.y));
+                }
+
+                if (this.firstXDir == -1) {
+                    let index = bind_reversal ? bind_index2 : bind_index1;
+                    points[index].x += (x * Math.abs(delta.x));
+                } else if (this.firstXDir == 1) {
+                    let index = bind_reversal ? bind_index1 : bind_index2;
+                    points[index].x += (x * Math.abs(delta.x));
                 }
             } else {
 

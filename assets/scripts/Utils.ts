@@ -17,7 +17,7 @@ export default class Utils {
         return [
             cc.v2(p0.x, p0.y),
             cc.v2(cPoint.x, cPoint.y),
-            cc.v2(p1.x + 2, p1.y),
+            cc.v2(p1.x, p1.y),
         ]
     }
 }

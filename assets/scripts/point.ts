@@ -34,7 +34,7 @@ export default class Point extends cc.Component {
         this.firstXDir = 0;
         this.lastPos = event.getLocation();
 
-        console.log(this.node)
+        // console.log(this.node)
     }
 
     private onTouchMove(event: cc.Event.EventTouch) {

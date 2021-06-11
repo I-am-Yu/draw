@@ -447,7 +447,7 @@
       "a": 255
     },
     "_lineJoin": 1,
-    "_lineCap": 0,
+    "_lineCap": 1,
     "_fillColor": {
       "__type__": "cc.Color",
       "r": 36,

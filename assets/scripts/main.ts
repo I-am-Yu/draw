@@ -108,6 +108,7 @@ export default class Main extends cc.Component {
         point2["bind_index2"] = 2;
         point2["bind_ctrl_dir"] = "y";
 
+        
         // let point2 = cc.instantiate(this.point)
         // point2["bind_uuid"] = this.xl.uuid;
         // point2["bind_type"] = "bezierCurveTo";

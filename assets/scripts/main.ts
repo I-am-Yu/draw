@@ -39,6 +39,7 @@ export default class Main extends cc.Component {
     }
 
     private onTouchStart(event: cc.Event.EventTouch) {
+        console.log(111)
 
         let pos = event.getLocation();
         this.startPos = this.getLocalPos(pos);
@@ -46,7 +47,6 @@ export default class Main extends cc.Component {
         // if (this.xl) {
         //     this.xl.destroy();
         // }
-
 
         this.xl = cc.instantiate(this.xuxian);
         this.node.addChild(this.xl);
@@ -69,10 +69,9 @@ export default class Main extends cc.Component {
     private onTouchEnd(event) {
         let pos = event.getLocation();
         this.endPos = this.getLocalPos(pos);
-        if (this.endPos.sub(this.startPos).mag() <= 1) {
+        if (this.endPos.sub(this.startPos).mag() <= 3) {
             return;
         }
-
 
         let p0 = this.startPos;
         let p1 = cc.v2(p0.x + this.xl.width, p0.y);
@@ -84,51 +83,41 @@ export default class Main extends cc.Component {
             p0, p1, p2, p3, p4
         ];
 
-
-        let getBezierArray = (uuid, index1, index2) => {
-            let p0 = Global.uuid_points_map[uuid][index1];
-            let p1 = Global.uuid_points_map[uuid][index2];
-            let cPoint = Utils.getTwoPointsCenter(p0, p1);
-            console.log(cPoint)
-            return [
-                cc.v2(p0.x, p0.y),
-                cc.v2(cPoint.x, cPoint.y + 50),
-                cc.v2(p1.x + 2, p1.y),
-            ]
-        }
-
-
+        // let point1 = cc.instantiate(this.point)
+        // point1["bind_uuid"] = this.xl.uuid;
+        // point1["bind_type"] = "lineTo";
+        // point1["bind_index1"] = 0;
+        // point1["bind_index2"] = 1;
+        // point1["bind_ctrl_dir"] = "x";
 
         let point1 = cc.instantiate(this.point)
         point1["bind_uuid"] = this.xl.uuid;
-        point1["bind_type"] = "lineTo";
+        point1["bind_type"] = "bezierCurveTo";
         point1["bind_index1"] = 0;
         point1["bind_index2"] = 1;
-
-        // let point1 = cc.instantiate(this.point)
-        // point1["bind_uuid"] = this.xl.uuid;
-        // point1["bind_type"] = "bezierCurveTo";
-        // point1["bind_index1"] = 0;
-        // point1["bind_index2"] = 1;
-        // point1["bezier_array"] = getBezierArray(point1["bind_uuid"], point1["bind_index1"], point1["bind_index2"]);
+        point1["bezier_array"] = Utils.getBezierArray(point1["bind_uuid"], point1["bind_index1"], point1["bind_index2"]);
+        point1["bind_ctrl_dir"] = "y";
 
         let point2 = cc.instantiate(this.point)
         point2["bind_uuid"] = this.xl.uuid;
         point2["bind_type"] = "lineTo";
         point2["bind_index1"] = 1;
         point2["bind_index2"] = 2;
+        point2["bind_ctrl_dir"] = "y";
 
         let point3 = cc.instantiate(this.point)
         point3["bind_uuid"] = this.xl.uuid;
         point3["bind_type"] = "lineTo";
         point3["bind_index1"] = 2;
         point3["bind_index2"] = 3;
+        point3["bind_ctrl_dir"] = "x";
 
         let point4 = cc.instantiate(this.point)
         point4["bind_uuid"] = this.xl.uuid;
         point4["bind_type"] = "lineTo";
         point4["bind_index1"] = 3;
         point4["bind_index2"] = 4;
+        point4["bind_ctrl_dir"] = "y";
 
         this.node.addChild(point1);
         this.node.addChild(point2);
@@ -143,18 +132,19 @@ export default class Main extends cc.Component {
         ]
 
         this.draw();
-
+        this.xl.active = false;
     }
 
-    private draw() {
+    public draw() {
+        this.ctx.clear();
+
         let keys = Object.keys(Global.uuid_ctrl_node_map)
         keys.forEach(key => {
-            console.log("key,", key);
 
             let ctrlNodes: cc.Node[] = Global.uuid_ctrl_node_map[key];
             let points = Global.uuid_points_map[key];
 
-            this.draw2("moveTo", points[0]);
+            this.setDrawPath("moveTo", points[0]);
 
             ctrlNodes.forEach(ctrlNode => {
                 let bind_type = ctrlNode["bind_type"];
@@ -162,25 +152,30 @@ export default class Main extends cc.Component {
                 let bind_index2 = ctrlNode["bind_index2"];
                 let bezier_array = ctrlNode["bezier_array"];
 
+                // 设置控制点
+                let p0 = points[bind_index1];
+                let p1 = points[bind_index2];
+                let centerPos = Utils.getTwoPointsCenter(p0, p1);
+                ctrlNode.x = centerPos.x;
+                ctrlNode.y = centerPos.y;
+
+                // 划线
                 switch (bind_type) {
                     case "lineTo":
-                        this.draw2(bind_type, points[bind_index2]);
+                        this.setDrawPath(bind_type, points[bind_index2]);
                         break;
                     case "bezierCurveTo":
-                        this.draw2(bind_type, bezier_array);
+                        this.setDrawPath(bind_type, bezier_array);
                         break;
                 }
-
             })
         })
-
-
 
         this.ctx.stroke();
     }
 
 
-    private draw2(type, pos) {
+    private setDrawPath(type, pos) {
         switch (type) {
             case "moveTo":
                 this.ctx.moveTo(pos.x, pos.y);

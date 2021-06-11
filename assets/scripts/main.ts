@@ -84,6 +84,7 @@ export default class Main extends cc.Component {
         // let point1 = cc.instantiate(this.point)
         // point1["bind_uuid"] = this.xl.uuid;
         // point1["bind_type"] = "lineTo";
+        // point1["bind_reversal"] = false;
         // point1["bind_index1"] = 0;
         // point1["bind_index2"] = 1;
         // point1["bind_ctrl_dir"] = "x";
@@ -91,6 +92,7 @@ export default class Main extends cc.Component {
         let point1 = cc.instantiate(this.point)
         point1["bind_uuid"] = this.xl.uuid;
         point1["bind_type"] = "bezierCurveTo";
+        point1["bind_reversal"] = false;
         point1["bind_index1"] = 0;
         point1["bind_index2"] = 1;
         point1["bezier_array"] = Utils.getBezierArray(point1["bind_uuid"], point1["bind_index1"], point1["bind_index2"]);
@@ -99,6 +101,7 @@ export default class Main extends cc.Component {
         let point2 = cc.instantiate(this.point)
         point2["bind_uuid"] = this.xl.uuid;
         point2["bind_type"] = "lineTo";
+        point2["bind_reversal"] = true;
         point2["bind_index1"] = 1;
         point2["bind_index2"] = 2;
         point2["bezier_array"] = Utils.getBezierArray(point2["bind_uuid"], point2["bind_index1"], point2["bind_index2"]);
@@ -107,6 +110,7 @@ export default class Main extends cc.Component {
         let point3 = cc.instantiate(this.point)
         point3["bind_uuid"] = this.xl.uuid;
         point3["bind_type"] = "lineTo";
+        point3["bind_reversal"] = true;
         point3["bind_index1"] = 2;
         point3["bind_index2"] = 3;
         point3["bezier_array"] = Utils.getBezierArray(point3["bind_uuid"], point3["bind_index1"], point3["bind_index2"]);
@@ -115,6 +119,7 @@ export default class Main extends cc.Component {
         let point4 = cc.instantiate(this.point)
         point4["bind_uuid"] = this.xl.uuid;
         point4["bind_type"] = "lineTo";
+        point4["bind_reversal"] = false;
         point4["bind_index1"] = 3;
         point4["bind_index2"] = 4;
         point4["bezier_array"] = Utils.getBezierArray(point4["bind_uuid"], point4["bind_index1"], point4["bind_index2"]);

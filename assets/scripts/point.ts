@@ -45,6 +45,7 @@ export default class Point extends cc.Component {
 
         let bind_uuid = this.node["bind_uuid"];
         let bind_type = this.node["bind_type"];
+        let bind_reversal = this.node["bind_reversal"];
         let bind_index1 = this.node["bind_index1"];
         let bind_index2 = this.node["bind_index2"];
         let bezier_array = this.node["bezier_array"];
@@ -66,10 +67,12 @@ export default class Point extends cc.Component {
             }
 
             if (this.firstXDir == -1) {
-                points[bind_index1].x += (x * Math.abs(delta.x));
-                bezier_array[0].x += (x * Math.abs(delta.x));
+                let index = bind_reversal ? bind_index2 : bind_index1;
+                points[index].x += (x * Math.abs(delta.x));
+                // bezier_array[0].x += (x * Math.abs(delta.x));
             } else if (this.firstXDir == 1) {
-                points[bind_index2].x += (x * Math.abs(delta.x));
+                let index = bind_reversal ? bind_index1 : bind_index2;
+                points[index].x += (x * Math.abs(delta.x));
             }
         }
 
@@ -93,15 +96,17 @@ export default class Point extends cc.Component {
                 } else if (this.firstYDir == 1) {
                     bezier_array[1].y += (y * Math.abs(delta.y));
                 }
-            }else{
-                
+            } else {
+
                 if (this.firstYDir == -1) {
-                    points[bind_index1].y += (y * Math.abs(delta.y));
+                    let index = bind_reversal ? bind_index2 : bind_index1;
+                    points[index].y += (y * Math.abs(delta.y));
                 } else if (this.firstYDir == 1) {
-                    points[bind_index2].y += (y * Math.abs(delta.y));
+                    let index = bind_reversal ? bind_index1 : bind_index2;
+                    points[index].y += (y * Math.abs(delta.y));
                 }
             }
-         
+
         }
 
         Global.uuid_points_map[bind_uuid][bind_index1] = points[bind_index1];

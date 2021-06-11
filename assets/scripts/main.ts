@@ -56,6 +56,9 @@ export default class Main extends cc.Component {
 
         let pos = event.getLocation();
         this.movePos = this.getLocalPos(pos);
+        if (this.movePos.sub(this.startPos).mag() <= 50) {
+            return;
+        }
 
         let _w = this.movePos.x - this.startPos.x;
         let _h = this.movePos.y - this.startPos.y;
@@ -67,7 +70,7 @@ export default class Main extends cc.Component {
     private onTouchEnd(event) {
         let pos = event.getLocation();
         this.endPos = this.getLocalPos(pos);
-        if (this.endPos.sub(this.startPos).mag() <= 3) {
+        if (this.endPos.sub(this.startPos).mag() <= 50) {
             return;
         }
 
@@ -104,6 +107,14 @@ export default class Main extends cc.Component {
         point2["bind_index1"] = 1;
         point2["bind_index2"] = 2;
         point2["bind_ctrl_dir"] = "y";
+
+        // let point2 = cc.instantiate(this.point)
+        // point2["bind_uuid"] = this.xl.uuid;
+        // point2["bind_type"] = "bezierCurveTo";
+        // point2["bind_reversal"] = true;
+        // point2["bind_index1"] = 1;
+        // point2["bind_index2"] = 2;
+        // point2["bind_ctrl_dir"] = "x";
 
         let point3 = cc.instantiate(this.point)
         point3["bind_uuid"] = this.xl.uuid;
@@ -157,7 +168,7 @@ export default class Main extends cc.Component {
 
                 let __temp_bezier_array: cc.Vec2[] = [];
                 if (bezier_array) {
-                    __temp_bezier_array = bezier_array
+                    __temp_bezier_array = bezier_array;
                 }
                 ctrlNode["bezier_array"] = Utils.getBezierArray(bind_uuid, bind_index1, bind_index2);
                 bezier_array = ctrlNode["bezier_array"];

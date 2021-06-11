@@ -66,12 +66,21 @@ export default class Point extends cc.Component {
                 this.firstXDir = x;
             }
 
-            if (this.firstXDir == -1) {
-                let index = bind_reversal ? bind_index2 : bind_index1;
-                points[index].x += (x * Math.abs(delta.x));
-            } else if (this.firstXDir == 1) {
-                let index = bind_reversal ? bind_index1 : bind_index2;
-                points[index].x += (x * Math.abs(delta.x));
+            if (bind_type == "bezierCurveTo") {
+                if (this.firstXDir == -1) {
+                    bezier_array[1].x += (x * Math.abs(delta.x));
+                } else if (this.firstXDir == 1) {
+                    bezier_array[1].x += (x * Math.abs(delta.x));
+                }
+            } else {
+
+                if (this.firstXDir == -1) {
+                    let index = bind_reversal ? bind_index2 : bind_index1;
+                    points[index].x += (x * Math.abs(delta.x));
+                } else if (this.firstXDir == 1) {
+                    let index = bind_reversal ? bind_index1 : bind_index2;
+                    points[index].x += (x * Math.abs(delta.x));
+                }
             }
         }
 

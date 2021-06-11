@@ -39,8 +39,6 @@ export default class Main extends cc.Component {
     }
 
     private onTouchStart(event: cc.Event.EventTouch) {
-        console.log(111)
-
         let pos = event.getLocation();
         this.startPos = this.getLocalPos(pos);
 
@@ -103,6 +101,7 @@ export default class Main extends cc.Component {
         point2["bind_type"] = "lineTo";
         point2["bind_index1"] = 1;
         point2["bind_index2"] = 2;
+        point2["bezier_array"] = Utils.getBezierArray(point2["bind_uuid"], point2["bind_index1"], point2["bind_index2"]);
         point2["bind_ctrl_dir"] = "y";
 
         let point3 = cc.instantiate(this.point)
@@ -110,6 +109,7 @@ export default class Main extends cc.Component {
         point3["bind_type"] = "lineTo";
         point3["bind_index1"] = 2;
         point3["bind_index2"] = 3;
+        point3["bezier_array"] = Utils.getBezierArray(point3["bind_uuid"], point3["bind_index1"], point3["bind_index2"]);
         point3["bind_ctrl_dir"] = "x";
 
         let point4 = cc.instantiate(this.point)
@@ -117,6 +117,7 @@ export default class Main extends cc.Component {
         point4["bind_type"] = "lineTo";
         point4["bind_index1"] = 3;
         point4["bind_index2"] = 4;
+        point4["bezier_array"] = Utils.getBezierArray(point4["bind_uuid"], point4["bind_index1"], point4["bind_index2"]);
         point4["bind_ctrl_dir"] = "y";
 
         this.node.addChild(point1);
@@ -150,30 +151,34 @@ export default class Main extends cc.Component {
                 let bind_type = ctrlNode["bind_type"];
                 let bind_index1 = ctrlNode["bind_index1"];
                 let bind_index2 = ctrlNode["bind_index2"];
-                let bezier_array = ctrlNode["bezier_array"];
+                let bezier_array: cc.Vec2[] = ctrlNode["bezier_array"];
 
-                // 设置控制点
                 let p0 = points[bind_index1];
                 let p1 = points[bind_index2];
                 let centerPos = Utils.getTwoPointsCenter(p0, p1);
-                ctrlNode.x = centerPos.x;
-                ctrlNode.y = centerPos.y;
 
-                // 划线
                 switch (bind_type) {
                     case "lineTo":
+                        // 划线
                         this.setDrawPath(bind_type, points[bind_index2]);
                         break;
                     case "bezierCurveTo":
+                        // 划线
                         this.setDrawPath(bind_type, bezier_array);
+
+                        let arrs = this.bezierCalculate(bezier_array, 50);
+                        centerPos = arrs[25];
                         break;
                 }
+
+                // 设置控制点
+                ctrlNode.x = centerPos.x;
+                ctrlNode.y = centerPos.y;
             })
         })
 
         this.ctx.stroke();
     }
-
 
     private setDrawPath(type, pos) {
         switch (type) {
@@ -189,8 +194,6 @@ export default class Main extends cc.Component {
                 break;
         }
     }
-
-
 
     private getLocalPos(pos: cc.Vec2) {
         let out = cc.v2();

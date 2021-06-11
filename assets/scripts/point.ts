@@ -30,11 +30,11 @@ export default class Point extends cc.Component {
     private onTouchStart(event: cc.Event.EventTouch) {
         event.stopPropagation();
 
-        console.log(222)
         this.reset();
-        console.log(this.node)
         this.firstXDir = 0;
         this.lastPos = event.getLocation();
+
+        console.log(this.node)
     }
 
     private onTouchMove(event: cc.Event.EventTouch) {
@@ -65,18 +65,13 @@ export default class Point extends cc.Component {
                 this.firstXDir = x;
             }
 
-            // let a = this.movePos.subSelf(this.lastPos).normalizeSelf();
-            // a.x = Math.ceil(a.x);
-            // a.y = Math.ceil(a.y);
-            // console.log(a)
-
             if (this.firstXDir == -1) {
                 points[bind_index1].x += (x * Math.abs(delta.x));
+                bezier_array[0].x += (x * Math.abs(delta.x));
             } else if (this.firstXDir == 1) {
                 points[bind_index2].x += (x * Math.abs(delta.x));
             }
         }
-
 
         if (bind_ctrl_dir == "y") {
             let y = 0;
@@ -92,16 +87,26 @@ export default class Point extends cc.Component {
                 this.firstYDir = y;
             }
 
-            if (this.firstYDir == -1) {
-                points[bind_index1].y += (y * Math.abs(delta.y));
-            } else if (this.firstYDir == 1) {
-                points[bind_index2].y += (y * Math.abs(delta.y));
+            if (bind_type == "bezierCurveTo") {
+                if (this.firstYDir == -1) {
+                    bezier_array[1].y += (y * Math.abs(delta.y));
+                } else if (this.firstYDir == 1) {
+                    bezier_array[1].y += (y * Math.abs(delta.y));
+                }
+            }else{
+                
+                if (this.firstYDir == -1) {
+                    points[bind_index1].y += (y * Math.abs(delta.y));
+                } else if (this.firstYDir == 1) {
+                    points[bind_index2].y += (y * Math.abs(delta.y));
+                }
             }
+         
         }
-
 
         Global.uuid_points_map[bind_uuid][bind_index1] = points[bind_index1];
         Global.uuid_points_map[bind_uuid][bind_index2] = points[bind_index2];
+        Global.uuid_points_map[bind_uuid][bezier_array] = bezier_array;
 
         let main: Main = cc.find("Canvas").getComponent(Main);
         main.draw();

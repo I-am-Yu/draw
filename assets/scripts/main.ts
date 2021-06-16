@@ -30,6 +30,7 @@ export default class Main extends cc.Component {
     private endPos = cc.v2();
 
     protected onLoad() {
+        cc.systemEvent
 
         this.node.on(cc.Node.EventType.TOUCH_START, this.onTouchStart, this);
 
